@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TestTask</string>
+    <string name="API_KEY">nsokmmmcDybQxwSuqAsB</string>
+    <array name="items">
+        <item>Quandl dataprovider</item>
+        <item>Google dataprovider</item>
+        <item>Yahoo dataprovider</item>
+        <item>Quotemedia dataprovider</item>
+    </array>
+    <string name="wait">Please wait...</string>
+    <string name="yes">Ok</string>
+    <string name="adUnsupportedTicker">The ticker is incorrectly specified!</string>
+    <string name="pdLoadingTickers">Loading tickers...</string>
+    <string name="adServerConnProblem">Server connection problem!</string>
+    <string name="urlTickers">https://s3.amazonaws.com/quandl-static-content/Ticker+CSV%27s/WIKI_tickers.csv</string>
+    <string name="toastTickersNotLoaded">Server connection problem. Tickers not loaded!</string>
+    <string name="urlGoogleDataProvider">http://www.google.com/finance/historical?output=csv&amp;q=</string>
+    <string name="urlQuotemediaDataProvider">http://app.quotemedia.com/quotetools/getHistoryDownload.csv?&amp;webmasterId=501&amp;isRanged=false&amp;symbol=</string>
+    <string name="urlYahooDataProvider">http://ichart.finance.yahoo.com/table.csv?d=6&amp;e=1&amp;g=d&amp;a=7&amp;b=19&amp;ignore=.csv&amp;s=</string>
+</resources>
