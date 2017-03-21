@@ -24,12 +24,22 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MainActivity class
+ *
+ * @author Oleksandr Molodykh
+ */
 public class MainActivity extends AppCompatActivity {
     Spinner spinnerAllDataFeeds;
     AutoCompleteTextView tvTicker;
     RecyclerView recyclerView;
     List<String> tickers;
 
+    /**
+     * initializing view elements
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         spinnerAllDataFeeds.setSelection(0, false);
     }
 
+    /**
+     * used for handling click on search icon
+     */
     View.OnTouchListener OnSearchTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -62,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * used for overriding default behavior of selecting suggestion from autocompletetextview
+     */
     AdapterView.OnItemClickListener OnTickerSelectedListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,6 +88,11 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Depending on the chosen datafeed and the specified ticker
+     * from this method starts the process of obtaining information
+     * from certain servers
+     */
     private void onSearchClick() {
         int spinnerPosition = spinnerAllDataFeeds.getSelectedItemPosition();
         String ticker = tvTicker.getText().toString();
@@ -81,12 +102,17 @@ public class MainActivity extends AppCompatActivity {
                 InputMethodManager.HIDE_NOT_ALWAYS);
         switch (spinnerPosition) {
             case 0:
+                //work with json response from quandl.com with a Retrofit2. Creating and
+                //starting instance of DatafeedController
                 DatafeedController datafeedController = DatafeedController.getInstance
                         (getResources().
                                 getString(R.string.API_KEY), ticker, recyclerView, MainActivity.this);
                 datafeedController.start();
                 break;
             default:
+                //work with csv responses from other services with custom class
+                //UndocumentedDatafeedsReceiver extended AsynkTask. Creating and
+                //starting instance of DatafeedController
                 UndocumentedDatafeedsReceiver undocumentedDatafeedsReceiver =
                         new UndocumentedDatafeedsReceiver(spinnerPosition, ticker,
                                 MainActivity.this, recyclerView);
@@ -95,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * member inner class for asynchronous loading tickers
+     * from server
+     *
+     * @author Oleksandr Molodykh
+     */
     class TickerLoader extends AsyncTask {
         private ProgressDialog pd;
         private String err = null;
@@ -110,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
             pd.show();
         }
 
+        /**
+         * Creating connection and getting response
+         */
         @Override
         protected Object doInBackground(Object[] params) {
             URL url;

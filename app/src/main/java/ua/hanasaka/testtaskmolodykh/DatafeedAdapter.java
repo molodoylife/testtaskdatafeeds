@@ -8,6 +8,10 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Adapter for recyclerview using List<List<String>> data
+ * @author  Oleksandr Molodykh
+ */
 public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHolder> {
 
     private List<List<String>> listData;
@@ -22,6 +26,11 @@ public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHo
         return new ViewHolder(v);
     }
 
+    /**
+     * alignment data and setting it to view
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         List<String> regularRow = listData.get(position);
@@ -35,6 +44,9 @@ public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHo
         holder.content.setText(sbContent.toString());
     }
 
+    /**
+     * @return count of listData items (rows of quandl response)
+     */
     @Override
     public int getItemCount() {
         if (listData == null)
@@ -48,6 +60,7 @@ public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
+            //finding view elements
             date = (TextView) itemView.findViewById(R.id.date);
             content = (TextView) itemView.findViewById(R.id.content);
         }

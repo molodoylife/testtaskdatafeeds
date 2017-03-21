@@ -1,5 +1,10 @@
 package ua.hanasaka.testtaskmolodykh;
 
+/**
+ * Class for containing urls for work
+ *
+ * @author Oleksandr Molodykh
+ */
 public class DataURLs {
     public static final String urlTickers = "https://s3.amazonaws.com/quandl-static-content/" +
             "Ticker+CSV%27s/WIKI_tickers.csv";

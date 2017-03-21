@@ -19,6 +19,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * This class used for work with  undocumented datafeeds.
+ * Chosen datafeed and ticker passed in constructor as a Context and RecyclerView
+ * When execute() method call from MainActivity in doInBackground() will
+ * be set appropriate url, opened connection and gotten response. Then in onPostExecute()
+ * will be created DatafeedAdapter and set one to recyclerview
+ *
+ * @author Oleksandr Molodykh
+ */
 public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean> {
     private static Context ctx;
     private static int datafeed;
@@ -28,6 +37,14 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
     private static RecyclerView recyclerView;
     List<List<String>> results;
 
+    /**
+     * constructor of UndocumentedDatafeedsReceiver object
+     *
+     * @param datafeed
+     * @param ticker
+     * @param ctx
+     * @param recyclerView
+     */
     public UndocumentedDatafeedsReceiver(int datafeed, String ticker, Context ctx,
                                          RecyclerView recyclerView) {
         UndocumentedDatafeedsReceiver.recyclerView = recyclerView;
@@ -104,6 +121,12 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         }
     }
 
+    /**
+     * setting List<List<String>> results
+     *
+     * @param br BufferedReader object with response
+     * @return true if no exception is thrown
+     */
     private boolean retrieveListData(BufferedReader br) {
         results = new ArrayList<>();
         String line;
@@ -141,6 +164,12 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         return true;
     }
 
+    /**
+     * getting ArrayList data for organization rows
+     *
+     * @param row
+     * @return ArrayList with concrete format adjusted data
+     */
     private List<String> getStringGoogleDatafeed(String row) {
         return new ArrayList<String>(Arrays.asList(row.substring(0, row.lastIndexOf(",")).split(",")));
     }
@@ -155,6 +184,11 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         return new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(initArr, 0, 5)));
     }
 
+    /**
+     * AlertDialog with error message
+     *
+     * @param mess
+     */
     private void showAlert(String mess) {
         AlertDialog dialog = new AlertDialog.Builder(ctx)
                 .setMessage(mess)

@@ -16,6 +16,11 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/**
+ * class creates the Retrofit client, calls the Quandl API and handles the result
+ *
+ * @author Oleksandr Molodykh
+ */
 public class DatafeedController implements Callback<DatafeedModel> {
     private static String api_key;
     private static String ticker;
@@ -25,13 +30,29 @@ public class DatafeedController implements Callback<DatafeedModel> {
     private ProgressDialog pd;
 
 
+    /**
+     * private constructor for realization Singleton pattern
+     */
     private DatafeedController() {
     }
 
+    /**
+     * class-helper for creation static instance of DatafeedController
+     * (Bill Pugh) decision
+     */
     private static class DatafeedControllerHelper {
         private static final DatafeedController INSTANCE = new DatafeedController();
     }
 
+    /**
+     * initialization static fields and return DatafeedController instance
+     *
+     * @param API_KEY
+     * @param ticker
+     * @param recyclerView
+     * @param ctx
+     * @return singleton instance of DatafeedController
+     */
     public static DatafeedController getInstance(String API_KEY, String ticker, RecyclerView
             recyclerView, Context ctx) {
         DatafeedController.ctx = ctx;
@@ -41,6 +62,12 @@ public class DatafeedController implements Callback<DatafeedModel> {
         return DatafeedControllerHelper.INSTANCE;
     }
 
+    /**
+     * method for creation Retrofit object
+     * and sending asynchronous request to
+     * endpoint. Response will be handle in
+     * onResponse(Call<DatafeedModel> call, Response<DatafeedModel> response) method
+     */
     public void start() {
         pd = new ProgressDialog(ctx);
         pd.setProgressStyle(R.style.myProgressDialog);
@@ -48,17 +75,28 @@ public class DatafeedController implements Callback<DatafeedModel> {
         pd.setIndeterminate(true);
         pd.setCanceledOnTouchOutside(false);
         pd.show();
+        //creating Retrofit
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DataURLs.urlQuandlDataProviderBaseUrl)
+                //setting GsonConverterFactory
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         QuandlApi quandlAPI = retrofit.create(QuandlApi.class);
-
+        //getting object Call<>
         Call<DatafeedModel> call = quandlAPI.loadChanges(DatafeedController.ticker, DatafeedController.api_key);
+        //asynchronous request
         call.enqueue(this);
     }
 
+    /**
+     * Here we get response in DatafeedModel format
+     * then retrieve listData and setting adapter to
+     * recyclerView
+     *
+     * @param call
+     * @param response
+     */
     @Override
     public void onResponse(Call<DatafeedModel> call, Response<DatafeedModel> response) {
         if (response.isSuccessful()) {
@@ -84,6 +122,13 @@ public class DatafeedController implements Callback<DatafeedModel> {
         }
     }
 
+    /**
+     * if something will wrong and request will not successful
+     * onFailure() will be called
+     *
+     * @param call
+     * @param t
+     */
     @Override
     public void onFailure(Call<DatafeedModel> call, Throwable t) {
         pd.dismiss();
@@ -91,7 +136,12 @@ public class DatafeedController implements Callback<DatafeedModel> {
         showAlert(err);
     }
 
-    private void showAlert(String mess){
+    /**
+     * AlertDialog with error message
+     *
+     * @param mess
+     */
+    private void showAlert(String mess) {
         AlertDialog dialog = new AlertDialog.Builder(ctx)
                 .setMessage(mess)
                 .setPositiveButton(R.string.yes,
