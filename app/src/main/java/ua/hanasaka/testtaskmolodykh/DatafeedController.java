@@ -17,7 +17,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DatafeedController implements Callback<DatafeedModel> {
-    private static final String BASE_URL = "https://www.quandl.com";
     private static String api_key;
     private static String ticker;
     private static Context ctx;
@@ -50,7 +49,7 @@ public class DatafeedController implements Callback<DatafeedModel> {
         pd.setCanceledOnTouchOutside(false);
         pd.show();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(DataURLs.urlQuandlDataProviderBaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

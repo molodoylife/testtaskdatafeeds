@@ -12,9 +12,4 @@ public class DatafeedModel {
     public Dataset getDataset() {
         return dataset;
     }
-
-    public void setDataset(Dataset dataset) {
-        this.dataset = dataset;
-    }
-
 }

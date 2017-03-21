@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -21,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean> {
-    private static final String TAG = "myLogs";
     private static Context ctx;
     private static int datafeed;
     private static String ticker;
@@ -55,16 +53,16 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         try {
             switch (datafeed) {
                 case 1:
-                    url = new URL(ctx.getResources().getString(R.string.urlGoogleDataProvider) + ticker);
+                    url = new URL(DataURLs.urlGoogleDataProvider + ticker);
                     break;
                 case 2:
-                    url = new URL(ctx.getResources().getString(R.string.urlYahooDataProvider) + ticker);
+                    url = new URL(DataURLs.urlYahooDataProvider + ticker);
                     break;
                 case 3:
-                    url = new URL(ctx.getResources().getString(R.string.urlQuotemediaDataProvider) + ticker);
+                    url = new URL(DataURLs.urlQuotemediaDataProvider + ticker);
                     break;
             }
-            HttpURLConnection connection = null;
+            HttpURLConnection connection;
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream inputStream;
@@ -103,9 +101,7 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
             if (error != null) {
                 showAlert(error);
             }
-            Log.i(TAG, "some problem onPostEx Undoc....");
         }
-
     }
 
     private boolean retrieveListData(BufferedReader br) {

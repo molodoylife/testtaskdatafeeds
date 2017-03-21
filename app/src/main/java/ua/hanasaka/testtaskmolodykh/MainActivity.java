@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "myLogs";
     Spinner spinnerAllDataFeeds;
     AutoCompleteTextView tvTicker;
     RecyclerView recyclerView;
@@ -38,19 +35,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        tickers = (List<String>)getLastCustomNonConfigurationInstance();
-        if(tickers!=null){
-            Log.i(TAG, "tickers.size"+tickers.size());
-        }
-        if(tickers==null){
-            TickerLoader tl = new TickerLoader();
-            tl.execute();
-        }
+        TickerLoader tl = new TickerLoader();
+        tl.execute();
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
-        spinnerAllDataFeeds = (Spinner) findViewById(R.id.spinnerAllDataFeeds);
         tvTicker = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
         tvTicker.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.search, 0);
         tvTicker.setOnTouchListener(OnSearchTouchListener);
+        spinnerAllDataFeeds = (Spinner) findViewById(R.id.spinnerAllDataFeeds);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_item,
                 getResources().getStringArray(R.array.items));
         spinnerAllDataFeeds.setAdapter(adapter);
@@ -88,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
                 Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                 InputMethodManager.HIDE_NOT_ALWAYS);
-        switch (spinnerPosition){
+        switch (spinnerPosition) {
             case 0:
                 DatafeedController datafeedController = DatafeedController.getInstance
                         (getResources().
@@ -124,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             URL url;
             tickers = new ArrayList<>();
             try {
-                url = new URL(getResources().getString(R.string.urlTickers));
+                url = new URL(DataURLs.urlTickers);
                 HttpURLConnection connection;
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -151,26 +142,10 @@ public class MainActivity extends AppCompatActivity {
             if (err != null) {
                 Toast.makeText(MainActivity.this, getResources().getString(R.string.toastTickersNotLoaded), Toast.LENGTH_SHORT).show();
             } else {
-                tvTicker.setAdapter(new ArrayAdapter<String>(MainActivity.this,
+                tvTicker.setAdapter(new ArrayAdapter<>(MainActivity.this,
                         android.R.layout.simple_dropdown_item_1line, tickers));
                 tvTicker.setOnItemClickListener(OnTickerSelectedListener);
             }
         }
-    }
-
-    @Override
-    public List<String> onRetainCustomNonConfigurationInstance() {
-        return tickers;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 }
