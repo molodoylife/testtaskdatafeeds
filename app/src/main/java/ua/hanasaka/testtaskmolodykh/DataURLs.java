@@ -8,7 +8,7 @@ package ua.hanasaka.testtaskmolodykh;
 public class DataURLs {
     public static final String urlTickers = "https://s3.amazonaws.com/quandl-static-content/" +
             "Ticker+CSV%27s/WIKI_tickers.csv";
-    public static final String urlQuandlDataProviderBaseUrl = "https://www.quandl.com";
+    public static final String urlQuandlDataProvider = "https://www.quandl.com/api/v3/datasets/WIKI/";
     public static final String urlGoogleDataProvider = "http://www.google.com/finance/historical?" +
             "output=csv&q=";
     public static final String urlQuotemediaDataProvider = "http://app.quotemedia.com/quotetools/" +

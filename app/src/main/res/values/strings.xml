@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">TestTask</string>
-    <string name="API_KEY">nsokmmmcDybQxwSuqAsB</string>
     <array name="items">
         <item>Quandl dataprovider</item>
         <item>Google dataprovider</item>
         <item>Yahoo dataprovider</item>
         <item>Quotemedia dataprovider</item>
     </array>
-    <string name="wait">Please wait...</string>
-    <string name="yes">Ok</string>
+    <string name="wait">Please wait…</string>
+    <string name="internetNotAvailable">Internet is not available</string>
+    <string name="yes">OK</string>
     <string name="adUnsupportedTicker">The ticker is incorrectly specified!</string>
-    <string name="pdLoadingTickers">Tickers loading...</string>
+    <string name="pdLoadingTickers">Tickers loading…</string>
     <string name="adServerConnProblem">Server connection problem!</string>
     <string name="toastTickersNotLoaded">Server connection problem. Tickers not loaded!</string>
 </resources>

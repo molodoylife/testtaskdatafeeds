@@ -1,4 +1,4 @@
-package ua.hanasaka.testtaskmolodykh;
+package ua.hanasaka.testtaskmolodykh.datareceiver;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import ua.hanasaka.testtaskmolodykh.DataURLs;
+import ua.hanasaka.testtaskmolodykh.R;
+import ua.hanasaka.testtaskmolodykh.adapter.DatafeedAdapter;
+
 /**
  * This class used for work with  undocumented datafeeds.
  * Chosen datafeed and ticker passed in constructor as a Context and RecyclerView
@@ -28,29 +32,31 @@ import java.util.List;
  *
  * @author Oleksandr Molodykh
  */
-public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean> {
-    private static Context ctx;
-    private static int datafeed;
-    private static String ticker;
+public class DatafeedsReceiver extends AsyncTask<Void, Void, Boolean> {
+    private final Context ctx;
+    private final int datafeed;
+    private final String ticker;
     private ProgressDialog pd;
-    String error;
-    private static RecyclerView recyclerView;
-    List<List<String>> results;
+    private String error;
+    private final RecyclerView recyclerView;
+    private List<List<String>> results;
 
     /**
-     * constructor of UndocumentedDatafeedsReceiver object
+     * constructor of DatafeedsReceiver object
      *
-     * @param datafeed
-     * @param ticker
-     * @param ctx
-     * @param recyclerView
+     * @param datafeed     number of datafeed
+     * @param ticker       chosen ticker
+     * @param ctx          Context ctx
+     * @param recyclerView transfered RecyclerView
      */
-    public UndocumentedDatafeedsReceiver(int datafeed, String ticker, Context ctx,
-                                         RecyclerView recyclerView) {
-        UndocumentedDatafeedsReceiver.recyclerView = recyclerView;
-        UndocumentedDatafeedsReceiver.ctx = ctx;
-        UndocumentedDatafeedsReceiver.datafeed = datafeed;
-        UndocumentedDatafeedsReceiver.ticker = ticker;
+
+
+    public DatafeedsReceiver(int datafeed, String ticker, Context ctx,
+                             RecyclerView recyclerView) {
+        this.recyclerView = recyclerView;
+        this.ctx = ctx;
+        this.datafeed = datafeed;
+        this.ticker = ticker;
     }
 
     @Override
@@ -69,6 +75,9 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         URL url = null;
         try {
             switch (datafeed) {
+                case 0:
+                    url = new URL(DataURLs.urlQuandlDataProvider + ticker + ".csv");
+                    break;
                 case 1:
                     url = new URL(DataURLs.urlGoogleDataProvider + ticker);
                     break;
@@ -80,16 +89,16 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
                     break;
             }
             HttpURLConnection connection;
+            if (url == null) {
+                throw new NullPointerException();
+            }
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             InputStream inputStream;
             connection.connect();
             inputStream = connection.getInputStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
-            if (retrieveListData(br))
-                return true;
-            else
-                return false;
+            return retrieveListData(br);
         } catch (FileNotFoundException e) {
             error = ctx.getResources().getString(R.string.adUnsupportedTicker);
             return false;
@@ -133,6 +142,11 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
         try {
             br.readLine();
             switch (datafeed) {
+                case 0:
+                    while ((line = br.readLine()) != null) {
+                        results.add(getStringQuandlDatafeed(line));
+                    }
+                    break;
                 case 1:
                     while ((line = br.readLine()) != null) {
                         results.add(getStringGoogleDatafeed(line));
@@ -167,27 +181,32 @@ public class UndocumentedDatafeedsReceiver extends AsyncTask<Void, Void, Boolean
     /**
      * getting ArrayList data for organization rows
      *
-     * @param row
+     * @param row raw row
      * @return ArrayList with concrete format adjusted data
      */
     private List<String> getStringGoogleDatafeed(String row) {
-        return new ArrayList<String>(Arrays.asList(row.substring(0, row.lastIndexOf(",")).split(",")));
+        return Arrays.asList(row.substring(0, row.lastIndexOf(",")).split(","));
+    }
+
+    private List<String> getStringQuandlDatafeed(String row) {
+        String[] initArr = row.split(",");
+        return Arrays.asList(Arrays.copyOfRange(initArr, 0, 5));
     }
 
     private List<String> getStringYahooDatafeed(String row) {
         String[] initArr = row.split(",");
-        return new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(initArr, 0, 5)));
+        return Arrays.asList(Arrays.copyOfRange(initArr, 0, 5));
     }
 
     private List<String> getStringQuotomediaDatafeed(String row) {
         String[] initArr = row.split(",");
-        return new ArrayList<String>(Arrays.asList(Arrays.copyOfRange(initArr, 0, 5)));
+        return Arrays.asList(Arrays.copyOfRange(initArr, 0, 5));
     }
 
     /**
      * AlertDialog with error message
      *
-     * @param mess
+     * @param mess error message
      */
     private void showAlert(String mess) {
         AlertDialog dialog = new AlertDialog.Builder(ctx)

@@ -1,4 +1,4 @@
-package ua.hanasaka.testtaskmolodykh;
+package ua.hanasaka.testtaskmolodykh.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,13 +8,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ua.hanasaka.testtaskmolodykh.R;
+
 /**
  * Adapter for recyclerview using List<List<String>> data
- * @author  Oleksandr Molodykh
+ *
+ * @author Oleksandr Molodykh
  */
 public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHolder> {
 
-    private List<List<String>> listData;
+    private final List<List<String>> listData;
 
     public DatafeedAdapter(List<List<String>> listData) {
         this.listData = listData;
@@ -28,20 +31,20 @@ public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHo
 
     /**
      * alignment data and setting it to view
-     * @param holder
-     * @param position
+     *
+     * @param holder   instance of ViewHolder class
+     * @param position position of row
      */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         List<String> regularRow = listData.get(position);
         String date = regularRow.get(0);
-        StringBuilder sbContent = new StringBuilder();
-        sbContent.append("o=").append(regularRow.get(1));
-        sbContent.append("h=").append(regularRow.get(2));
-        sbContent.append("l=").append(regularRow.get(3));
-        sbContent.append("c=").append(regularRow.get(3));
+        String sbContent = "o=" + regularRow.get(1) +
+                "h=" + regularRow.get(2) +
+                "l=" + regularRow.get(3) +
+                "c=" + regularRow.get(3);
         holder.date.setText(date);
-        holder.content.setText(sbContent.toString());
+        holder.content.setText(sbContent);
     }
 
     /**
@@ -55,8 +58,8 @@ public class DatafeedAdapter extends RecyclerView.Adapter<DatafeedAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView date;
-        TextView content;
+        final TextView date;
+        final TextView content;
 
         public ViewHolder(View itemView) {
             super(itemView);
